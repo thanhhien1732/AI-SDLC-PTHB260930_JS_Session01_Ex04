@@ -1,4 +1,4 @@
-Em đã hoàn thành 5 hàm thống kê điểm quiz và xếp hạng học viên trong tệp script.js và kiểm tra toàn bộ ca kiểm thử trên tests.html mà không làm thay đổi mảng dữ liệu gốc. 
+Em đã hoàn thành 5 hàm thống kê điểm quiz và xếp hạng học viên trong tệp script.js và kiểm tra toàn bộ ca kiểm thử mà không làm thay đổi mảng dữ liệu gốc. 
 - Với hàm getValidScores, em dùng filter để tạo mảng mới chỉ giữ lại các phần tử thuộc kiểu number trong đoạn từ 0 đến 10; còn hàm averageScore dùng reduce để cộng dồn tổng điểm hợp lệ rồi chia trung bình. 
 - Ở hàm topScores, em kết hợp cú pháp spread [...] để tạo bản sao độc lập trước khi sắp xếp giảm dần bằng sort và cắt lấy n phần tử đầu bằng slice. 
 - Với hàm rankNames, em dùng push lưu các chỉ số hợp lệ vào mảng phụ, sắp xếp chỉ số bằng sort theo điểm giảm dần (giữ nguyên thứ tự gốc khi bằng điểm) rồi dùng map để lấy ra tên học viên tương ứng. 
