@@ -36,47 +36,73 @@ function averageScore(scores) {
 
 // 3. Lấy n điểm hợp lệ cao nhất theo thứ tự giảm dần
 function topScores(scores, n) {
-  // Xử lý trường hợp đặc biệt: n bằng 0 hoặc âm thì trả về mảng rỗng ngay
-  if (n <= 0) {
-    return [];
-  }
+    // Xử lý trường hợp đặc biệt: n bằng 0 hoặc âm thì trả về mảng rỗng ngay
+    if (n <= 0) {
+        return [];
+    }
 
-  const validScores = getValidScores(scores);
+    const validScores = getValidScores(scores);
 
-  // Sao chép bằng spread trước khi sort để không làm biến đổi mảng và sắp xếp giảm dần
-  const sortedScores = [...validScores].sort((a, b) => b - a);
+    // Sao chép bằng spread trước khi sort để không làm biến đổi mảng và sắp xếp giảm dần
+    const sortedScores = [...validScores].sort((a, b) => b - a);
 
-  // Cắt lấy n phần tử đầu tiên (nếu n lớn hơn số điểm hợp lệ, slice tự động lấy hết mảng)
-  return sortedScores.slice(0, n);
+    // Cắt lấy n phần tử đầu tiên (nếu n lớn hơn số điểm hợp lệ, slice tự động lấy hết mảng)
+    return sortedScores.slice(0, n);
 }
 
 // 4. Xếp hạng tên học viên theo điểm giảm dần
 function rankNames(names, scores) {
-  const validIndices = [];
+    const validIndices = [];
 
-  // Thu thập chỉ số (index) của những học viên có điểm hợp lệ
-  for (let i = 0; i < scores.length; i++) {
-    const score = scores[i];
-    if (typeof score === "number" && score >= 0 && score <= 10) {
-      validIndices.push(i);
+    // Thu thập chỉ số (index) của những học viên có điểm hợp lệ
+    for (let i = 0; i < scores.length; i++) {
+        const score = scores[i];
+        if (typeof score === "number" && score >= 0 && score <= 10) {
+            validIndices.push(i);
+        }
     }
-  }
 
-  // Sắp xếp mảng chỉ số dựa theo điểm giảm dần; nếu bằng điểm thì giữ nguyên thứ tự ban đầu (a - b)
-  validIndices.sort((indexA, indexB) => {
-    if (scores[indexB] !== scores[indexA]) {
-      return scores[indexB] - scores[indexA];
+    // Sắp xếp mảng chỉ số dựa theo điểm giảm dần; nếu bằng điểm thì giữ nguyên thứ tự ban đầu (a - b)
+    validIndices.sort((indexA, indexB) => {
+        if (scores[indexB] !== scores[indexA]) {
+            return scores[indexB] - scores[indexA];
+        }
+        return indexA - indexB;
+    });
+
+    // Ánh xạ từ danh sách chỉ số đã sắp xếp sang mảng tên học viên tương ứng
+    return validIndices.map((index) => names[index]);
+}
+
+// 5. Đếm số lượng học viên theo từng mức xếp loại: [Giỏi, Khá, Trung bình, Yếu]
+function countByGrade(scores) {
+    const validScores = getValidScores(scores);
+    // Khởi tạo mảng 4 phần tử tương ứng: [số Giỏi, số Khá, số Trung bình, số Yếu]
+    const gradeCounts = [0, 0, 0, 0];
+
+    // Duyệt qua các điểm hợp lệ và phân loại từ ngưỡng cao xuống ngưỡng thấp
+    for (const score of validScores) {
+        if (score >= 8) {
+            gradeCounts[0]++;
+        } else if (score >= 6.5) {
+            gradeCounts[1]++;
+        } else if (score >= 5) {
+            gradeCounts[2]++;
+        } else {
+            gradeCounts[3]++;
+        }
     }
-    return indexA - indexB;
-  });
 
-  // Ánh xạ từ danh sách chỉ số đã sắp xếp sang mảng tên học viên tương ứng
-  return validIndices.map((index) => names[index]);
+    return gradeCounts;
 }
 
 
 
 // ================= TEST =================
+console.log("--- KIỂM TRA MẢNG GỐC ---");
+console.log("Mảng gốc hiện tại :", sampleScores);
+console.log("Kỳ vọng           : [8.5, 6, 9.5, 4.5, -1, 7]\n");
+
 console.log("--- 1. TEST getValidScores ---");
 console.log("Kết quả :", getValidScores(sampleScores));
 console.log("Kỳ vọng : [8.5, 6, 9.5, 4.5, 7]\n");
@@ -94,5 +120,11 @@ console.log("Top 0 (kết quả) :", topScores(sampleScores, 0), "(kỳ vọng: 
 console.log("--- 4. TEST rankNames ---");
 console.log("Kết quả :", rankNames(sampleNames, sampleScores));
 console.log(
-  "Kỳ vọng : ['Lê Minh Quân', 'Nguyễn Văn An', 'Vũ Khánh Linh', 'Trần Thu Hà', 'Phạm Ngọc Mai']\n"
+    "Kỳ vọng : ['Lê Minh Quân', 'Nguyễn Văn An', 'Vũ Khánh Linh', 'Trần Thu Hà', 'Phạm Ngọc Mai']\n"
+);
+
+console.log("--- 5. TEST countByGrade ---");
+console.log("Kết quả :", countByGrade(sampleScores));
+console.log(
+    "Kỳ vọng : [2, 1, 1, 1]  (2 Giỏi, 1 Khá, 1 TB, 1 Yếu | bỏ -1)\n"
 );
